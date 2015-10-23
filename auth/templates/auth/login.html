@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block link %}
+<link rel="stylesheet" href="{{url_for('authbp.static', filename='sign.css')}}">
+{% endblock %}
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for msg in messages %}
+        <li>{{ msg }} </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+<form action="" method="POST" class="form-sign">
+    {{ form.hidden_tag() }}
+    <h2 class="form-sign-heading">Please sign in</h2>
+    <label for="inputUsername" class="sr-only">User name</label>
+    {{ form.username(class_="form-control", type="username", placeholder="User name")}}
+    {% for error in form.username.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+    <label for="inputPassword" class="sr-only">Password</label>
+    {{ form.password(class_="form-control", type="password", placeholder="Password")}}
+    {% for error in form.password.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+    <p>Not have a account? <a href="{{ url_for('authbp.register') }}">Sign up</a></p>
+</form>
+</div>
+{% endblock content %}

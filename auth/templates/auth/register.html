@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block link %}
+<link rel="stylesheet" href="{{ url_for('authbp.static', filename='sign.css')}}">
+{% endblock link %}
+
+{% block title %}
+Sign up
+{% endblock title %}
+
+{% block content %}
+<div class="container">
+<form action="" method="POST" class="form-sign">
+    {{ form.hidden_tag() }}
+    <h2 class="form-sign-headline">Please sign up</h2>
+    <div class="form-group">
+    <label for="inputusername">User Name</label> 
+    {{ form.username(class_="form-control", placeholder="Username") }}
+    {% for error in form.username.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+    </div>
+    <div class="form-group">
+        <label for="inputEmail">Email</label>
+    {{ form.email(class_="form-control", placeholder="Email address") }}
+    {% for error in form.email.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Password</label>
+    {{ form.password(class_="form-control", placeholder="Password") }}
+    {% for error in form.password.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+    </div>
+    <div class="form-group">
+        <label for="inputConfirmpassword">Confirm Password</label>
+    {{ form.confirm(class_="form-control", placeholder="Confirm password") }}
+    {% for error in form.confirm.errors %}
+    <span class="error">{{ error }}</span>
+    {% endfor %}
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+    <p>Have a account?<a href="{{ url_for('authbp.login')}}">Sign in</a></p>
+</form>
+</div>
+{% endblock content %}

@@ -5,8 +5,8 @@ from flask import Blueprint
 
 mainbp = Blueprint('mainbp', __name__,
         template_folder = 'templates')
+from mainapp import views
 #app = Flask(__name__)
 #app.register_blueprint(authbp, url_prefix='/auth')
-@mainbp.route('/')
-def hello():
+def index():
     return 'Hello Amherst'

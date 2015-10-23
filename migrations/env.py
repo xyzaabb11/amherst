@@ -28,6 +28,7 @@ for name, url in current_app.config.get("SQLALCHEMY_BINDS").items():
     bind_names.append(name)
 target_metadata = current_app.extensions['migrate'].db.metadata
 
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
@@ -65,6 +66,7 @@ def run_migrations_offline():
         engines[name] = rec = {}
         rec['url'] = context.config.get_section_option(name,
                                                        "sqlalchemy.url")
+
     for name, rec in engines.items():
         logger.info("Migrating database %s" % (name or '<default>'))
         file_ = "%s.sql" % name
@@ -106,8 +108,6 @@ def run_migrations_online():
         config.get_section(config.config_ini_section),
         prefix='sqlalchemy.',
         poolclass=pool.NullPool)}}
-    print(bind_names)
-    print(engines.items())
     for name in bind_names:
         engines[name] = rec = {}
         rec['engine'] = engine_from_config(
@@ -125,7 +125,6 @@ def run_migrations_online():
             rec['transaction'] = conn.begin()
 
     try:
-        print(engines.items())
         for name, rec in engines.items():
             logger.info("Migrating database %s" % (name or '<default>'))
             context.configure(
@@ -137,7 +136,6 @@ def run_migrations_online():
                 **current_app.extensions['migrate'].configure_args
             )
             if name != '':
-                print("1111111111111111"+name)
                 context.run_migrations(engine_name=name)
 
         if USE_TWOPHASE:

@@ -11,7 +11,7 @@ manager = Manager(app)
 
 #manager.py migrate init --multidb
 migrate = Migrate(app, db)
-manager.add_command('migrate', MigrateCommand)
+manager.add_command('db', MigrateCommand)
 
 if __name__ == "__main__":
    manager.run()

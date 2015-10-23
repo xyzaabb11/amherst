@@ -4,9 +4,11 @@
 from flask import Blueprint
 
 authbp = Blueprint('authbp', __name__,
-        template_folder='templates')
+        template_folder='templates',
+        static_folder='static')
 
-import auth.models
+from auth import views
 @authbp.route('/')
+@authbp.route('/index')
 def show():
     return 'Hello Blueprint'
