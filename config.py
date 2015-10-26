@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 
+
 SECRET_KEY = 'key'
 
 #数据库配置

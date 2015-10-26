@@ -1,1 +1,10 @@
 {% extends "base.html" %}
+
+{% block content %}
+
+<ul>
+    {% for post in posts %}
+    <li>{{post.title, post.create_time}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

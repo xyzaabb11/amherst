@@ -1,3 +1,74 @@
 {% extends "base.html" %}
 
+{% block link %}
+<link rel="stylesheet" href="{{ url_for('static', filename='editor.md/css/editormd.min.css') }}">
+<script src="{{ url_for('static', filename='editor.md/editormd.min.js')}}"></script>
+<script type="text/javascript">
+    var editor;
+    var funonchange = function (){
+//        console.log(editor.getMarkdown());
+        $("#md-control").text("Save...");
+//        console.log($("title").text());
+        var article = {
+            "title": getTitle(),
+            "content": editor.getMarkdown(),
+        }
+        if(article.title != $("title").text()&& article.title != null){
+            $("title").text(article.title);
+        }
+//        console.log(article);
+        $.post("{{ url_for('ambp.savepost')}}", article,
+                function(data){
+                    console.log(data);
+                    if(data.status === "OK"){
+                        $("#md-control").text("Save completed");
+                    }
+                }, "json");
+    }
+    $(function() {
+        editor = editormd("editormd", {
+            width: "100%",
+            height: 770,
+            path: "{{ url_for('static', filename='editor.md/lib/')}}",
+            //path: "../lib/"
+            onchange: function(){
+                funonchange();
+            }
+        });
+    });
+    $("#submit").click(function(){
+        alert(editor.getMarkdown);
+        alert("222")
+    });
+function getTitle(){
+    var reTitle = /^#(.*)$/m;
+    var title = reTitle.exec(editor.getMarkdown());
+//    console.log(title);
+    return title[1]
+}
+</script>
+{% endblock link %}
 
+{% block title %}
+Wirte Blog
+{% endblock title %}
+
+
+{% block content %}
+<div style="boder: 10px solid #FF0000;">
+    <span id="md-control">存储中</span>
+</div>
+<form active="" method="post">
+<div id="editormd">
+    <textarea style="display:none;">
+#这里输入标题
+标签（空格分隔）：未分类
+
+---
+
+在此输入正文
+</textarea>
+</div>
+<input id="submit" type="submit" value="Submit"/>
+</form>
+{% endblock content %}
