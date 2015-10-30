@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="editormd-view">
+    <textarea name="editormd-markdown-doc" style="display:none;"></textarea>
+</div>
+<div id="editormd-html">
+    <textarea id="append-html" style="display:none;"></textarea>
+</div>
+<script src="{{ url_for('static', filename='editor.md/lib/marked.min.js')}}"></script>
+<script src="{{ url_for('static', filename='editor.md/lib/prettify.min.js')}}"></script>
+<script src="{{ url_for('static', filename='editor.md/lib/raphael.min.js')}}"></script>
+<script src="{{ url_for('static', filename='editor.md/lib/underscore.min.js')}}"></script>
+<script src="{{ url_for('static', filename='editor.md/lib/sequence-diagram.min.js')}}"></script>
+<script src="{{ url_for('static', filename='editor.md/lib/flowchart.min.js')}}"></script>
+<script src="{{ url_for('static', filename='editor.md/lib/jquery.flowchart.min.js')}}"></script>
+<script src="{{ url_for('static', filename='editor.md/editormd.min.js')}}"></script>
+<script type="text/javascript">
+    $(function(){
+        var editormdView, editormdHtml;
+        $.get("{{url_for('ambp.show', id=id)}}", function(markdown){
+            console.log(markdown);
+        editormdView = editormd.markdownToHTML("editormd-view", {
+            markdown: markdown,
+            //markdown: "#headline",
+            htmlDecode: "style,script,iframe",
+            tocm: true,
+            emoji: true,
+            taskList: true,
+            tex: true,
+            flowChart:true,
+            sequenceDiagram: true,
+        });
+        });
+        editormdHtml = editormd.markdownToHTML("editormd-html", {
+            htmlDecode: "style,script,iframe",
+            emoji: true,
+            taskList: true,
+            tex: true,
+            flowChart:true,
+            sequenceDiagram: true,
+        });
+    });
+</script>
+{% endblock content %}

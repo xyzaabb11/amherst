@@ -1,0 +1,11 @@
+<div class="panel panel-info">
+    <div class="panel-headline">
+        <a href="{{ url_for('ambp.showpost', id=post.id) }}"<h3>{{ post.title }}</h3></a>
+    </div>
+    <div class="panel-body">
+    <span>详细</span>
+    </div>
+    <div class="panel-footer">
+        <span>发布时间:</span><span>{{ momentjs( post.create_time ).calendar() }}</span><span>更新时间:</span><span>{{ momentjs(post.update_time).fromNow() }}</span>
+    </div>
+</div>

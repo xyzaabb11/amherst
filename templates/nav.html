@@ -13,6 +13,11 @@
             <ul class="nav navbar-nav">
                 <li><a href="{{ url_for('ambp.index')}}">Blog</a></li>
             </ul>
+            {% block navbar %}
+<ul class="nav navbar-nav">
+    <li>11</li>
+</ul>
+            {% endblock navbar %}
             <ul class="nav navbar-nav navbar-right">
                 {% if g.user.is_authenticated %}
                 <li class="dropdown">
@@ -29,6 +34,7 @@
                 </ul>
                 </li>
                 {% else %}
+
                 <li>
                 <a href="{{ url_for('authbp.login')}}">Sigin up</a>
                 </li>

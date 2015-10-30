@@ -3,17 +3,85 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css')}}">
+        <!--link rel="stylesheet" href="{#{ url_for('static', filename='css/bootstrap.min.css')}#}"-->
+        <!-- 新 Bootstrap 核心 CSS 文件 -->
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+        <!-- 可选的Bootstrap主题文件（一般不用引入） -->
+        <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
         <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
         <script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
         <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
         <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <script src="{{ url_for('static', filename='js/moment.min.js')}}"></script>
+        <script type="text/javascript">
+            moment.locale('zh-cn', {
+meridiem : function (hour, minute, isLowercase) {
+if (hour < 9) {
+return "早上";
+} else if (hour < 11 && minute < 30) {
+return "上午";
+} else if (hour < 13 && minute < 30) {
+return "中午";
+} else if (hour < 18) {
+return "下午";
+} else {
+return "晚上";
+}
+}
+});
+        </script>
         {% block link %}
         {% endblock link %}
         <title>{% block title %}英明的博客{% endblock %}</title>
     </head>
     <body>
-        {% include 'nav.html' %}
+        {#{% include 'nav.html' without context %}#}
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url_for('mainbp.index')}}">Home</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li><a href="{{ url_for('ambp.index')}}">Blog</a></li>
+                    </ul>
+                    {% block navbar %}
+                    {% endblock navbar %}
+                    <ul class="nav navbar-nav navbar-right">
+                        {% if g.user.is_authenticated %}
+                        <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{g.user.username}}<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>
+                            <a href="{{ url_for('authbp.user')}}">Profile</a>
+                            </li>
+                            <li>
+                            <a href="{{ url_for('ambp.write') }}">Write blog</a>
+                            <li>
+                            <a href="{{ url_for('authbp.logout')}}">Sigin Out</a>
+                            </li>
+                        </ul>
+                        </li>
+                        {% else %}
+
+                        <li>
+                        <a href="{{ url_for('authbp.login')}}">Sigin up</a>
+                        </li>
+                        <li>
+                        <a href="{{ url_for('authbp.register')}}">Sigin In</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
         {% block content %}
         {% endblock %}
     </body>

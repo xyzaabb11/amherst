@@ -4,12 +4,16 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='editor.md/css/editormd.min.css') }}">
 <script src="{{ url_for('static', filename='editor.md/editormd.min.js')}}"></script>
 <script type="text/javascript">
-    var editor;
+    var editor, postid = {{id}};
+var posts = {{posts|tojson}};
     var funonchange = function (){
-//        console.log(editor.getMarkdown());
+        if(postid != 0){
         $("#md-control").text("Save...");
+//        console.log(editor.getMarkdown());
 //        console.log($("title").text());
         var article = {
+            "status": "update",
+            "id": postid,
             "title": getTitle(),
             "content": editor.getMarkdown(),
         }
@@ -20,10 +24,13 @@
         $.post("{{ url_for('ambp.savepost')}}", article,
                 function(data){
                     console.log(data);
+                    posts[data.id] = data.title;
+                    console.log(data);
                     if(data.status === "OK"){
                         $("#md-control").text("Save completed");
                     }
                 }, "json");
+        }
     }
     $(function() {
         editor = editormd("editormd", {
@@ -33,19 +40,41 @@
             //path: "../lib/"
             onchange: function(){
                 funonchange();
-            }
+            },
+            onload: function(){
+                if(postid != 0){
+                    getPost({{id}});
+                }
+                else {
+             //       loadDefautMD();
+                }
+            },
         });
     });
-    $("#submit").click(function(){
-        alert(editor.getMarkdown);
-        alert("222")
-    });
-function getTitle(){
-    var reTitle = /^#(.*)$/m;
-    var title = reTitle.exec(editor.getMarkdown());
-//    console.log(title);
-    return title[1]
-}
+
+    function loadMd(mdname){
+        $.get( "{{ url_for('ambp.static', filename='')}}" + mdname,function(markdown){
+            postid=0;
+            editor.setMarkdown(markdown);
+        });
+    }
+
+    function getPost(id){
+        url = "{{ url_for('ambp.getpost', id = '0', oldid='0')}}";
+        url = url.substring(0, url.length-3) + id + "/" + postid;
+        console.log(url)
+        $.get(url , function(post){
+            editor.setMarkdown(post);
+            postid = id;
+        });
+    }
+    function getTitle(){
+        var reTitle = /^#(.*)$/m;
+        var title = reTitle.exec(editor.getMarkdown());
+        return title[1]
+    }
+    function getTags(){
+    }
 </script>
 {% endblock link %}
 
@@ -53,12 +82,32 @@ function getTitle(){
 Wirte Blog
 {% endblock title %}
 
+{% block navbar %}
+<ul class="nav navbar-nav navbar-right">
+    <li class="dropdown">
+        <a href="#" id="doc-header" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li><a id="newdoc" href="#">新文档</a></li>
+            <li><a id="exampledoc" href="#">示例文档</a></li>
+        </ul>
+    </li>
+    <li class="dropdown" id="oped-md">
+        <a href="#" id="post-header" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+        </a>
+        <ul class="dropdown-menu" id="post-list">
+            <li>new</li>
+        </ul>
+    </li>
+</ul>
+{% endblock navbar %}
 
 {% block content %}
 <div style="boder: 10px solid #FF0000;">
-    <span id="md-control">存储中</span>
+    <span id="md-control"></span>
 </div>
-<form active="" method="post">
 <div id="editormd">
     <textarea style="display:none;">
 #这里输入标题
@@ -69,6 +118,37 @@ Wirte Blog
 在此输入正文
 </textarea>
 </div>
-<input id="submit" type="submit" value="Submit"/>
-</form>
+
+<script type="text/javascript">
+    $("#newdoc").click(function (){
+        postid = 0;
+        loadMd("new.md");
+        $("title").text(getTitle);
+        var article = {
+            "id": 0,
+            "content": "#这里输入标题\n标签（空格分隔）：未分类\n\n---\n\n在此输入正文",
+            "title": "这里输入标题",
+        };
+        $.post("{{ url_for('ambp.savepost')}}", article, function(data){
+            console.log(data);
+            postid = data.id;
+            posts[data.id] = data.title;
+            console.log(posts);
+        }, "json");
+    });
+    $("#exampledoc").click(function (){
+        loadMd("test.md");
+    });
+    $("#post-header").click(function (){
+            var html = "";
+            for(var item in posts){
+                html += "<li id=\"open-post\" value=\"" + item + "\">" + posts[item]+"</li>";
+            }
+            console.log(html);
+            $("#post-list").html(html);
+    });
+    $("#post-list").delegate("li", "click" ,function (){
+        getPost($(this).attr("value"));
+    });
+</script>
 {% endblock content %}

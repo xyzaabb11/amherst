@@ -8,7 +8,6 @@ app = Flask(__name__)
 app.config.from_object('config')
 
 lm = LoginManager()
-lm.init_app(app)
 db = SQLAlchemy(app)
 from auth import authbp
 from mainapp import mainbp
@@ -18,4 +17,5 @@ app.register_blueprint(mainbp)
 app.register_blueprint(authbp, url_prefix='/auth')
 app.register_blueprint(ambp, url_prefix='/amblog')
 
-lm.login_view = 'auth.login'
+lm.login_view = 'authbp.login'
+lm.init_app(app)

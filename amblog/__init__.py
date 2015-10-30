@@ -4,5 +4,6 @@
 from flask import Blueprint
 
 ambp = Blueprint('ambp', __name__,
-        template_folder = 'templates')
+        template_folder = 'templates',
+        static_folder = 'static')
 from amblog import views, models

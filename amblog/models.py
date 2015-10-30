@@ -17,14 +17,17 @@ class Category(db.Model):
 class Posts(db.Model):
     __bind_key__ = 'amblog'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120), unique=True)
+    title = db.Column(db.String(120))
     content = db.Column(db.Text)
     #category_id = db.Column(db.ForeignKey('category.id'))
     author = db.Column(db.Integer)
-    create_time = db.Column(db.DateTime, default = datetime.datetime.utcnow)
+    create_time = db.Column(db.DateTime, default = datetime.datetime.utcnow())
     update_time = db.Column(db.DateTime)
     publish = db.Column(db.Boolean, default = False)
     publish_time = db.Column(db.DateTime)
+    view_times = db.Column(db.Integer, default = 0)
+    last_visit_time = db.Column(db.DateTime)
+    last_updated = db.Column(db.Boolean, default = False)
 
     tag_list = db.relationship('Tag', secondary=lambda: PostAndTag.__table__)
 
