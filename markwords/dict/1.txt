@@ -1,0 +1,4 @@
+dicts/Collins/cn.mdx
+24-7
+[ADV 副词] 连续发生地;不中断地;无休止地；
+<class 'list'>
